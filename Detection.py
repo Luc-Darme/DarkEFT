@@ -417,12 +417,14 @@ def MakeEffLimits(exp, xLim_DP, Lim_DP, geff, optype, DelIni=0.1 ):
     xi,ratio,Lim = uf.GetRatio(ProdEff,xeff,NProd_DP,xProd_DP,Lim_DP,xLim_DP)
     if optype=="AV": # We need to rescale the decay rate also     
         Lam1TeV = np.full(np.size(xi),1000)
-        GamV= am.GamHDSee(xi,DelIni,Lam1TeV,{"gu11":2/3.,"gd11":-1/3.,"gl11":-1.},"V")
+        GamV= am.GamHDSee(xi,DelIni,Lam1TeV,{"gu11":2/3.,"gd11":-1/3.,"gd22":-1/3.,"gl11":-1.},"V")
         GamAV=am.GamHDSee(xi,DelIni,Lam1TeV,geff,"AV")
         Gamratio = GamAV/GamV
-
     else:
-        Gamratio=ratio*0+1
+        Lam1TeV = np.full(np.size(xi),1000)
+        GamVem= am.GamHDSee(xi,DelIni,Lam1TeV,{"gu11":2/3.,"gd11":-1/3.,"gd22":-1/3.,"gl11":-1.},"V")
+        GamV=am.GamHDSee(xi,DelIni,Lam1TeV,geff,"V")
+        Gamratio = GamV/GamVem
     EffLimIni =0.013*np.sqrt(xi)/np.sqrt(Lim)*np.power(ratio*Gamratio,1/8.)*1000
 #     if exp=="faser": print("faser ratio original:",ratio[xi>0.01]*Gamratio[xi>0.01])
 
@@ -447,11 +449,9 @@ def DetEff(xNProd, NProd, xlim, Lamlim, Del ,DelIni,  exp, geff, optype="V"):
 #     print("Laimlim: ", LamliminX[xi>0.01])
     NprodinX = np.interp(xi, xNProd*M1ToX, NProd)
     GammaDecayinX= am.GamHDSee(xi/M1ToX,DelIni,Lam1TeV,geff,optype)
-    if exp=="faser" :print("Laimlim: ", LamliminX[xi>0.021])
-#     print("Nprod: ", NprodinX[xi>0.01])
-    if exp=="faser" :print("Gamm: ", GammaDecayinX[xi>0.021])
+
     Res=np.power(LamliminX,8)/NprodinX/GammaDecayinX
-    if exp=="faser" :print("Res: ", np.nan_to_num(Res)*(GammaDecayinX>0))
+#     if exp=="faser" :print("Res: ", np.nan_to_num(Res)*(GammaDecayinX>0))
     return xi,np.nan_to_num(Res)*(GammaDecayinX>0) # We output as fnction of M1+M2
 
 
@@ -461,14 +461,12 @@ def DetEff(xNProd, NProd, xlim, Lamlim, Del ,DelIni,  exp, geff, optype="V"):
 # The limit M_pi0/3 is chosen such that the two states are still very light compare to M_pi0, so that the kinematics of the decay are not much modified (since the stretching is made
 # to adapt to the kinematic of the decay chi2 -> chi1 e+ e-)
 def Stretchfeff(xi,feffin,DelProd,Del):
-    thrup=br.MPi/5
+    thrup=br.MPi/3
     
     xlow=np.min(xi[feffin>0])
     fefftoStretch=feffin[np.logical_and(xi<thrup,xi>1.2*xlow)]
     xefftoStretch=xi[np.logical_and(xi<thrup,xi>1.2*xlow)]    
-#     print(fefftoStretch)
-#     fefftoStretch=feffin[np.logical_and(xi<thrup,xi>2*me/DelProd*(2+DelProd))]
-#     xefftoStretch=xi[np.logical_and(xi<thrup,xi>2*me/DelProd*(2+DelProd))]
+
     xilow=xi[xi<thrup]
     xiInterp = uf.log_sample(2*me/Del*(2+Del),thrup,len(xefftoStretch))
 #     print(xiInterp)
@@ -512,26 +510,24 @@ def ShiftLimDel(xNProd, NProd, xlim, Lamlim, Del ,DelIni,  exp, optypetmp,gefftm
 #     if (exp == "faser") : print("Faser prod " , xi , Nnew[xi>0.01])
 ####### ----- Recasting the detection rate
     M12ToM2=(1+Del)/(Del+2)
-#     GamNew=am.GamHDSee(xi/(1+Del),Del,Lam1TeV,geff,optype)
 #     print("Effective Gamma",xi,GamNew)
-#     print("Effective Nprod",xi,Nnew)
-#     if (exp == "faser") : print("Faser prod DP" , xi , NProd[xNProd>0.01])
-#     if (exp == "faser") : print("Faser prod DP" , xi , Lamlim[xlim>0.01])
-#     if (exp == "faser") : print("Testing ****************")
+
     xM1M2,fEffinX=DetEff(xNProd, NProd, xlim, Lamlim, Del ,DelIni,  exp,geff,optype)
     
-    fEffinM2=np.interp(xi, xM1M2*M12ToM2, fEffinX) 
+#     fEffinM2=np.interp(xi, xM1M2*M12ToM2, fEffinX) 
 
     # We stretch the function to account from the fact that the width of chi2 has a smaller lower bound (due to ee threshold)   
-    fEfftmp=Stretchfeff(xi, fEffinM2, DelIni, Del)
+    if Del>DelIni:
+        fEfftmp=Stretchfeff(xi, fEffinX, DelIni, Del)
+        fEffFinal=np.interp(xi, xi*M12ToM2, fEfftmp) 
+    else:
+        fEffFinal=np.interp(xi, xM1M2*M12ToM2, fEffinX) 
     
-    fEffFinal=np.interp(xi, xi*M12ToM2, fEfftmp) 
     
-    if (exp == "faser") : print("Faser xlow" , np.min(xi[fEffFinal>0]))
-    if (exp == "faser") : print("Faser xlow2 " , np.min(xi[fEffinM2>0]))
-    if (exp == "faser") : print("Faser fEffFinal" , fEffFinal[xi>0.006])
-#     if (exp == "faser") : print("Faser full" ,  Nnew[xi>0.01]*GamNew[xi>0.01]*fEffFinal[xi>0.01])
-#     print("Effective factor",xi,fEffFinal)  
+#     if (exp == "faser") : print("Faser xlow" , np.min(xi[fEffFinal>0]))
+#     if (exp == "faser") : print("Faser xlow2 " , np.min(xi[fEffinM2>0]))
+#     if (exp == "faser") : print("Faser fEffFinal" , fEffFinal[xi>0.006])
+
     Limnew = np.power(fEffFinal*GamNew*Nnew,1/8.)
 
     ####### ---------- If the limits is decreased due to EFT limitation at LHC
@@ -600,7 +596,7 @@ def RecastDecayLimit(xi,limOp1,Delini,Del,exp,geff,optype="V",HeavyMeson=False):
 ###############  Summarise all of the above, give the limit on Lambda from a dark photon bounds
 #                following the most standard procedure 
 def FastDecayLimit(exp,x_in,Lim_in, Del_in,Del,geff,optype="V", CombMerge=1.1,useHeavyMeson=False):
-#     if (exp == "faser") : print("Faser Limit in" , Lim_in)
+
     xeff,Limeff = MakeEffLimits(exp, x_in, Lim_in, geff, optype, Del_in )
     xi_cast,Lim_cast,Lim_cast_low = RecastDecayLimit(xeff,Limeff,Del_in,Del,exp,geff,optype,useHeavyMeson)   
 #     print("Full limits: " , exp, xi_cast,Lim_cast,Lim_cast_low)  
@@ -658,7 +654,7 @@ def MakeTableLimit(xi,limOp1,Delini,exp,geff,optype="V"):
 ################  Same, but works with at single value for the input mass
 def MakeTableLimit_OneMass(xi,limOp1,exp,Mx2,DelProd,geff,optype="V"):
     
-    xDel =  np.logspace(-3, 3,2000, endpoint=True)
+    xDel =  np.logspace(-3, 3,200, endpoint=True)
     xFin = xi/(1+DelProd)
     Dexp,Lexp,beamtype=GeomForExp(exp)
     xprod, NProd = br.NProd(DelProd,exp,geff,optype)

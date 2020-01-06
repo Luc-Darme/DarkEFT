@@ -8,7 +8,7 @@
 
 ### Include all the various production channels for the fermion portal,
 ### with user-input choices for the masses of the dark sector particles
-### L. Darme 29/12/2019
+### L. Darme, T. You, S. Ellis 29/12/2019
 
 
 ############################ Messy library import part #########################

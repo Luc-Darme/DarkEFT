@@ -543,14 +543,14 @@ UpdateLimitList(bes_invisibledecayJPsi);UpdateLimitList(babar_invisibledecayUpsi
 
 
 
-######################### CR limits at T2K #################
-if verbose: print("Decay from CR production limits ...")
-
-t2k_cosmicrays=Limit("t2k_cosmicrays","t2k","cosmicrays",0.0)
-t2k_cosmicrays.descr="""
-Projections from T2K limits based on cosmic ray production of dark sector states
-limits for 500 number of signal events per year, neutrino background for superK is ~150
-
-"""
-UpdateLimitList(t2k_cosmicrays)
+######################### CR limits at T2K ################# Currently not used
+# if verbose: print("Decay from CR production limits ...")
+# 
+# t2k_cosmicrays=Limit("t2k_cosmicrays","t2k","cosmicrays",0.0)
+# t2k_cosmicrays.descr="""
+# Projections from T2K limits based on cosmic ray production of dark sector states
+# limits for 500 number of signal events per year, neutrino background for superK is ~150
+# 
+# """
+# UpdateLimitList(t2k_cosmicrays)
 

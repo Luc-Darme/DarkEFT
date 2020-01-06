@@ -46,7 +46,7 @@ if __name__ == "__main__":
     xi_charm, Lim_charm=uf.CombineUpDown(xif,EffLimFin_Low,EffLim,1.1)
 
     print( "-----  Recasted limit on Lambda (in GeV) -------")
-    print(np.dstack((xi_charm,EffLimFin_Low,EffLim)))
+    print(np.dstack((xif,EffLimFin_Low,EffLim)))
     print( "------------")
     print( "-----  Combined up and down limit on Lambda (in GeV) -------")
     print(np.dstack((xi_charm, Lim_charm)))
