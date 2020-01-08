@@ -13,9 +13,9 @@
 
 ############################ Messy library import part #########################
 import numpy as np
-import numpy.ma as ma
+
 from numpy.random import uniform, seed
-from functools import partial
+
 from scipy import optimize as opt
 from scipy.interpolate import interp1d
 from scipy.integrate import quad

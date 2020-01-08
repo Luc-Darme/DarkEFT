@@ -18,7 +18,6 @@
 
 ############################ Messy library import part #########################
 import numpy as np
-import scipy.ndimage as ndimage
 
 # Importing the other sub-Modules
 

@@ -11,16 +11,11 @@
 ### L. Darme, T. You, S. Ellis 29/12/2019
 
 
-############################ Messy library import part #########################
+############################  library import part #########################
 import numpy as np
-import numpy.ma as ma
-from numpy.random import uniform, seed
-from functools import partial
 from scipy import optimize as opt
 from scipy.interpolate import interp1d
 import math
-
-
 
 from scipy.integrate import quad
 from scipy.optimize import minimize

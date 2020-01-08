@@ -10,22 +10,13 @@
 ###  The final functions are typically written as Fast****
 ###  L. Darme, S. Ellis, T. You, 29/12/2019
 
-############################ Messy library import part #########################
-#import matplotlib
-#matplotlib.use('agg')
-#import matplotlib.pyplot as plt
+
 ############
 
 import math
 import numpy as np
-from scipy.interpolate import griddata
+
 from scipy.optimize import minimize_scalar
-import matplotlib.pyplot as plt
-import numpy.ma as ma
-from numpy.random import uniform, seed
-import scipy.ndimage as ndimage
-from matplotlib import rcParams
-from functools import partial
 from scipy import optimize as opt
 from scipy.special import lambertw
 
