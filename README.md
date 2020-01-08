@@ -30,14 +30,14 @@ xi_full,Lim_full= lim.miniboone_scattering.recast(0.25,geffem,"V")
 ### Structure
 
 #### Main modules
-DarkEFT typically manipulates numpy arrays of limits on the effective operator scale and output the final result as function of the mass of the heavy state X2 (see 2001.01490 for more details). 
+DarkEFT typically manipulates numpy arrays of limits on the effective operator scale and outputs the final result as a function of the mass of the heavy state X2 (see 2001.01490 for more details). 
 
-The main elements of DarkEFT are as follow
-- `Amplitudes.py` This module contains analytical form for the mesonic decay widths for both the vector and axial-vector operators, as well as the decay widths for the decays  X2 -> X1 SM SM of a  heavy dark sector state X2 into a lighter one X1 and Standard Model particles.
-- `Production.py` This module contains all the routine to find the number of produced dark sector particles in various situations, mostly for beam dump experiments. Note that it also loads external databases when relevant (in particular for parton-level production, and for the dark photon production data used in certain recasting)
+The main elements of DarkEFT are as follows:
+- `Amplitudes.py` This module contains analytical expressions for the mesonic decay widths for both the vector and axial-vector operators, as well as the decay widths for the decays  X2 -> X1 SM SM of a  heavy dark sector state X2 into a lighter one X1 and Standard Model particles.
+- `Production.py` This module contains all the routines to find the number of produced dark sector particles in various situations, mostly for beam dump experiments. Note that it also loads external databases when relevant (in particular for parton-level production, and for the dark photon production data used in certain recasting).
 - `Detection.py` Contains the main functions used for the recasting, typically named "Fast<limittype>Limit", as well as their auxialliary functions. 
 - `LimitsList.py` Defines the class structure for the limits, and lists all the available limits, along with a description, a link with the relevant reference and the functions which should be used for recasting it.
-- `UsefulFunctions.py` Various auxilliary functions, mainly related to the import, export and other operations on the arrays of limits.
+- `UsefulFunctions.py` Various auxiliary functions, mainly related to the import, export and other operations on the arrays of limits.
   
 The main folder finally contains also external Data. Including `Data/LimData` which contains all the external limits to be recasted, and `Data/ProdData` which contains the dark sector production data which cannot be directly generated within DarkEFT.
 
